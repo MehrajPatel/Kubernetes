@@ -1,0 +1,29 @@
+#Forward port 8081 to 80
+kubectl port-forward nginx 8081:80 
+
+#Get response from the nginx pod
+curl --head http:127.0.0.1:8081
+
+#Get the pod's logs
+kubctl logs nginx
+
+#Run the command on the top ngnix
+kubectl exec -it ngnix -- ngnix v
+
+#Create a service using above deployment
+kubectl expose deployment ngnix --port 80 --type NodePort
+
+#List the services in the cluster
+kubectl get services
+
+#Get a response from the service
+curl -I localhost:<nodeport>
+
+#List node status
+kubectl get nodes
+
+#Get detailed info about nodes
+kubectl describe nodes
+
+#Get detailed info about pods
+kubectl describe pods
