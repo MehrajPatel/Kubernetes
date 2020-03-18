@@ -1,0 +1,49 @@
+##Node maintenance
+
+#Evict the pods on that nodes
+kubectl drain [node_name] --ignore-daemonsets
+
+#schedule pods on that node
+kubectl uncordon [node_name]
+
+#Add altest release of kubeadm
+kubectl delete node [node_name]
+
+#List the current tokens
+kubeadm token list
+
+#Get a new token to join
+kubeadm token generate
+
+#Print the kubeadm join command
+kubeadm token create <token name> --ttl 23th --print-join-command
+
+
+##Backup etcd
+
+#Get the etcd binaries
+wget "https://github.com/etcd-io/etcd/releases/download/v3.4.0/etcd-v3.4.0-linux-amd64.tar.gz"
+
+#unzip the binaries
+tar xvf etcd-v3.4.0-linux-amd64.tar.gz
+
+#Move the files to /usr/local/bin
+sudo mv etcd-v3.4.0-linux-amd64/etcd* /usr/local/bin
+
+#Take a snapshot of etcd
+ETCDCTL_API=3 etcdctl snapshot save snapshot.db
+
+#See the available commands for etcdctl
+ETCDCTL_API=3 etcdctl --help
+
+#The directory of you certificate files and snapshot of etcd
+/etc/kubernetes/pki/etcd/
+
+#Check if the snapshot was successful
+ETCDCTL_API=3 etcdctl --write-out=table snapshot status snapshot.db
+
+#Zip up the entire etcd directory
+sudo tar -zcvr etcd.tar.gz etcd
+
+#Copy the etcd directory elsewhere
+scp etcd.tar.gz cloud_user@18.219.235.44:~/
