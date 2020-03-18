@@ -1,0 +1,38 @@
+#Get the version of the server
+kubectl version --short
+
+#View the version of kublet
+kubectl describe nodes
+
+#View the version of controller-manager
+kubectl get po [controller_pod_name] -o yaml -n kube-system
+
+#Install new version of kubeadmn
+sudo apt install -y kubeadm-1.14.1-00
+
+#Hold version of kubeadmn
+sudo apt-mark hold kubeadm
+
+#Verify the version of kubeadm
+kubeadm version
+
+#Plan the upgrade before executing
+sudo kubadm upgrade plan
+
+#upgrade the controller components
+sudo kubeadm upgrade apply v1.14.1
+
+#Release the hold on the version of kubectl
+sudo apt-mark unlohd kubectl
+
+#Upgrade kubectl
+sudo apt install -y kubectl-1.14.1-00
+
+#Hold the version of kubectl at 1.14.1
+sudo apt-mark hold kubectl
+
+#Upgrade kubelet
+sudo apt install -y kubelet=1.14.1-00
+
+#Hold the version of kubelet at 1.14.1
+sudo apt-mark hold kubelet
